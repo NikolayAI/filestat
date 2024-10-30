@@ -10,10 +10,11 @@ int main(int argc, char *argv[]) {
     struct stat dir_entry_stat;
     const char* current_dir_path = ".";
     int stat_result;
+    // -2 to avoid count of parent and current directory
     int file_types_counts[] = {0, -2, 0, 0, 0, 0, 0};
     char* file_types[] = {
         "regulars",
-        "directories",
+        "directies",
         "blocks",
         "chars",
         "links",
@@ -35,23 +36,25 @@ int main(int argc, char *argv[]) {
 
         if (S_ISREG(dir_entry_stat.st_mode)) {
             file_types_counts[0]++;
-        } else if (S_ISDIR(dir_entry_stat.st_mode))    {
+        } else if (S_ISDIR(dir_entry_stat.st_mode)) {
             file_types_counts[1]++;
-        } else if (S_ISBLK(dir_entry_stat.st_mode))    {
+        } else if (S_ISBLK(dir_entry_stat.st_mode)) {
             file_types_counts[2]++;
-        } else if (S_ISCHR(dir_entry_stat.st_mode))    {
+        } else if (S_ISCHR(dir_entry_stat.st_mode)) {
             file_types_counts[3]++;
-        } else if (S_ISLNK(dir_entry_stat.st_mode))    {
+        } else if (S_ISLNK(dir_entry_stat.st_mode)) {
             file_types_counts[4]++;
-        } else if (S_ISFIFO(dir_entry_stat.st_mode))    {
+        } else if (S_ISFIFO(dir_entry_stat.st_mode)) {
             file_types_counts[5]++;
-        } else if (S_ISSOCK(dir_entry_stat.st_mode))    {
+        } else if (S_ISSOCK(dir_entry_stat.st_mode)) {
             file_types_counts[6]++;
         }
     }
 
     for (size_t i = 0; i < file_types_seize; i++) {
-        printf("%s files count - %d\n", file_types[i], file_types_counts[i]);
+        if (file_types_counts[i] > 0) {
+            printf("%s files count - %d\n", file_types[i], file_types_counts[i]);
+        }
     }
 
     closedir(dir);
